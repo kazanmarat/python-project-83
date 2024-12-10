@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, url_for
+from flask import Flask, render_template
+# from flask import request
 import os
 
 
@@ -14,7 +15,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 @app.route('/')
 def index():
-    address = request.args.get('address')
+    # address = request.args.get('address')
     return render_template(
         'index.html'
     )
