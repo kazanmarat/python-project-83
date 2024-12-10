@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <div class="container py-5 mt-3 mx-6 rounded bg-info ">
+        <h1>Анализатор страниц</h1>
+        <p>Бесплатно проверяйте сайты на SEO-пригодность</p>
+        <form action="/urls" method="get">
+            <div class="row">
+                <div class="col">
+                    <input class="form-control" type="search" name='address' placeholder="https://www.example.com">
+                </div>
+                <div class="col">
+                    <input class="btn btn-primary" type="submit" value="ПРОВЕРИТЬ">
+                </div>
+            
+            </div>
+        </form>
+    </div>
+</section>
+
+
+{% endblock %}
