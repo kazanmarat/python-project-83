@@ -10,8 +10,8 @@ debug:
 lint:
 	poetry run flake8 page_analyzer
 
-# later add 'test' after install tests
-check: lint
+build:
+	./build.sh
 
 PORT ?= 8000
 start:

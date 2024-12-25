@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<h1>Сайты</h1>
+{% block title %}<h1>Сайты</h1>{% endblock %}
 
-    
+{% block content %}
 <div class="table-responsive">
   <table class="table table-bordered table-hover text-nowrap" data-test="urls">
     <thead>
@@ -15,13 +14,17 @@
     </tr>
     </thead>
     <tbody>
-        <!-- will be soon -->
-        <!-- <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr> -->      
+      {% for address in addresses %}
+      <tr>
+        <td>{{ address.id }}</td>
+        <td>
+          <a href="{{ url_for('url', id=address.id) }}">
+          {{ address.name }}</a>
+        </td>
+        <td>{{ address.last_check }}</td>
+        <td>{{ address.response }}</td>
+      </tr>
+      {% endfor %}     
     </tbody>
   </table>
 </div>
