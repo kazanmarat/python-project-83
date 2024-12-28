@@ -62,9 +62,17 @@ def urls():
 @app.route('/urls/<int:id>')
 def url(id):
     address = DB.find_url_id(id)
+    urls_check = DB.get_content_check(id)
     if not address:
         return 'Page not found', 404
     return render_template(
         'url.html',
-        address=address
+        address=address,
+        urls_check=urls_check
     )
+
+
+@app.post('/urls/<int:id>/check')
+def check_url(id):
+    DB.save_url_check(id)
+    return redirect(url_for('url', id=id))

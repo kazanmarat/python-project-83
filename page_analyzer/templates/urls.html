@@ -21,8 +21,8 @@
           <a href="{{ url_for('url', id=address.id) }}">
           {{ address.name }}</a>
         </td>
-        <td>{{ address.last_check }}</td>
-        <td>{{ address.response }}</td>
+        <td>{{ address.created_at }}</td>
+        <td>{{ address.status_code }}</td>
       </tr>
       {% endfor %}     
     </tbody>

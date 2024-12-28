@@ -1,5 +1,5 @@
 import psycopg2
-from psycopg2.extras import DictCursor
+from psycopg2.extras import DictCursor, execute_values
 import datetime
 
 
@@ -14,8 +14,17 @@ class Database():
         conn = self._connect()
         with conn.cursor(cursor_factory=DictCursor) as cur:
             cur.execute('''
-                        SELECT * FROM urls
-                        ORDER BY id DESC'''
+                        SELECT DISTINCT ON (urls.id)
+                            urls.id,
+                            urls.name,
+                            url_checks.created_at,
+                            url_checks.status_code
+                        FROM urls
+                        INNER JOIN url_checks
+                        ON urls.id = url_checks.url_id
+                        ORDER BY urls.id,
+                            url_checks.created_at DESC,
+                            url_checks.status_code DESC'''
                         )
             content = [dict(row) for row in cur]
         conn.close()
@@ -57,3 +66,31 @@ class Database():
         conn.commit()
         conn.close()
         return id
+
+    def save_url_check(self, url_id):
+        status_code = 50
+        h1 = ''
+        title = ''
+        description = ''
+        created_at = datetime.date.today()
+        url_check = [(url_id, status_code, h1, title, description, created_at)]
+        conn = self._connect()
+        with conn.cursor() as cur:
+            query = '''INSERT INTO url_checks
+                       (url_id, status_code, h1, title, description, created_at)
+                       VALUES %s'''
+            execute_values(cur, query, url_check)
+        conn.commit()
+        conn.close()
+
+    def get_content_check(self, url_id):
+        conn = self._connect()
+        with conn.cursor(cursor_factory=DictCursor) as cur:
+            cur.execute('''
+                        SELECT * FROM url_checks
+                        WHERE url_id = %s
+                        ORDER BY id DESC''',
+                        (url_id,))
+            content = cur.fetchall() or {}
+        conn.close()
+        return content
