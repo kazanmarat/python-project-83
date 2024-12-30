@@ -20,7 +20,7 @@ class Database():
                             url_checks.created_at,
                             url_checks.status_code
                         FROM urls
-                        INNER JOIN url_checks
+                        LEFT JOIN url_checks
                         ON urls.id = url_checks.url_id
                         ORDER BY urls.id,
                             url_checks.created_at DESC,
@@ -67,19 +67,18 @@ class Database():
         conn.close()
         return id
 
-    def save_url_check(self, url_id):
-        status_code = 50
+    def save_url_check(self, url_id, status_code):
         h1 = ''
         title = ''
         description = ''
         created_at = datetime.date.today()
-        url_check = [(url_id, status_code, h1, title, description, created_at)]
+        check_info = [(url_id, status_code, h1, title, description, created_at)]
         conn = self._connect()
         with conn.cursor() as cur:
             query = '''INSERT INTO url_checks
                        (url_id, status_code, h1, title, description, created_at)
                        VALUES %s'''
-            execute_values(cur, query, url_check)
+            execute_values(cur, query, check_info)
         conn.commit()
         conn.close()
 

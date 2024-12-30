@@ -8,6 +8,7 @@ from flask import (Flask,
 import os
 from page_analyzer.db import Database
 import page_analyzer.url_handler as url_handler
+import requests
 
 
 try:
@@ -39,7 +40,7 @@ def index_post():
         url_handler.check_url(clean_url)
     except (url_handler.URLTooLong, url_handler.URLNotValid):
         flash('Некорректный URL', 'danger')
-        return redirect(url_for('index_get'), 302)
+        return redirect(url_for('index_get'), code=302)
 
     id_url = DB.find_url_name(clean_url)
     if id_url:
@@ -74,5 +75,10 @@ def url(id):
 
 @app.post('/urls/<int:id>/check')
 def check_url(id):
-    DB.save_url_check(id)
+    url_name = DB.find_url_id(id)[1]
+    try:
+        status_code = url_handler.check_connect(url_name)
+        DB.save_url_check(id, status_code)
+    except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
+        flash('Произошла ошибка при проверке', 'danger')
     return redirect(url_for('url', id=id))
