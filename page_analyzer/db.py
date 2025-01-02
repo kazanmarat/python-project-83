@@ -22,7 +22,7 @@ class Database():
                         FROM urls
                         LEFT JOIN url_checks
                         ON urls.id = url_checks.url_id
-                        ORDER BY urls.id,
+                        ORDER BY urls.id DESC,
                             url_checks.created_at DESC,
                             url_checks.status_code DESC'''
                         )
@@ -30,14 +30,14 @@ class Database():
         conn.close()
         return content
 
-    def find_url_id(self, id):
+    def exist_url_id(self, id):
         conn = self._connect()
         with conn.cursor(cursor_factory=DictCursor) as cur:
             cur.execute('''
                         SELECT * FROM urls
                         WHERE id = %s''',
                         (id,))
-            content = cur.fetchone() or [None]
+            content = cur.fetchone() or None
         conn.close()
         return content
 
@@ -67,12 +67,14 @@ class Database():
         conn.close()
         return id
 
-    def save_url_check(self, url_id, status_code):
-        h1 = ''
-        title = ''
-        description = ''
+    def save_url_check(self, content):
         created_at = datetime.date.today()
-        check_info = [(url_id, status_code, h1, title, description, created_at)]
+        check_info = [(content['url_id'],
+                       content['status_code'],
+                       content['h1'],
+                       content['title'],
+                       content['description'],
+                       created_at)]
         conn = self._connect()
         with conn.cursor() as cur:
             query = '''INSERT INTO url_checks

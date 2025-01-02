@@ -62,10 +62,10 @@ def urls():
 
 @app.route('/urls/<int:id>')
 def url(id):
-    address = DB.find_url_id(id)
-    urls_check = DB.get_content_check(id)
+    address = DB.exist_url_id(id)
     if not address:
-        return 'Page not found', 404
+        return render_template('not_found.html'), 404
+    urls_check = DB.get_content_check(id)
     return render_template(
         'url.html',
         address=address,
@@ -75,10 +75,11 @@ def url(id):
 
 @app.post('/urls/<int:id>/check')
 def check_url(id):
-    url_name = DB.find_url_id(id)[1]
+    url_name = DB.exist_url_id(id)['name']
     try:
-        status_code = url_handler.check_connect(url_name)
-        DB.save_url_check(id, status_code)
+        content = url_handler.get_content(url_name)
+        content['url_id'] = id
+        DB.save_url_check(content)
     except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
         flash('Произошла ошибка при проверке', 'danger')
     return redirect(url_for('url', id=id))
