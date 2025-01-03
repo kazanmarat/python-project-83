@@ -1,3 +1,31 @@
+"""
+Module for a Flask web application that interacts with a PostgreSQL database.
+
+Imports:
+- Flask: Web framework for creating the application.
+- os: Operating system module for interacting with the operating system.
+- Database: Custom class for interacting
+    with a PostgreSQL database using psycopg2.
+- url_handler: Module for handling URLs.
+- requests: HTTP library for making requests.
+
+Environment Setup:
+- Loads environment variables from a .env file using dotenv.
+
+Global Variables:
+- app: Flask application instance.
+- app.config['SECRET_KEY']: Secret key for the Flask application.
+- DATABASE_URL: URL for connecting to the PostgreSQL database.
+- DB: Instance of the Database class initialized with the DATABASE_URL.
+
+Routes and Functions:
+- index_get(): GET route for the homepage to render the index.html template.
+- index_post(): POST route for processing form submission on the homepage.
+- urls(): Route to display all URLs in the database.
+- url(id): Route to display information about a specific URL.
+- check_url(id): Route to check the content of a URL
+    and save the results in the database.
+"""
 from flask import (Flask,
                    render_template,
                    request,
@@ -80,6 +108,7 @@ def check_url(id):
         content = url_handler.get_content(url_name)
         content['url_id'] = id
         DB.save_url_check(content)
+        flash('Страница успешно проверена', 'success')
     except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
         flash('Произошла ошибка при проверке', 'danger')
     return redirect(url_for('url', id=id))
