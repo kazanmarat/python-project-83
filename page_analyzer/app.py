@@ -54,6 +54,8 @@ DB = Database(DATABASE_URL)
 @app.route('/')
 def index_get():
     address = request.form.get('url', '')
+
+    print(DATABASE_URL)
     return render_template(
         'index.html',
         address=address,
@@ -76,12 +78,16 @@ def index_post():
     else:
         id_url = DB.save_url(clean_url)
         flash('Страница успешно добавлена', 'success')
+
+    print(DATABASE_URL)
     return redirect(url_for('url', id=id_url), code=302)
 
 
 @app.route('/urls/')
 def urls():
     addresses = DB.get_content()
+
+    print(DATABASE_URL)
     return render_template(
         'urls.html',
         addresses=addresses
@@ -94,6 +100,8 @@ def url(id):
     if not address:
         return render_template('not_found.html'), 404
     urls_check = DB.get_content_check(id)
+
+    print(DATABASE_URL)
     return render_template(
         'url.html',
         address=address,
@@ -111,4 +119,6 @@ def check_url(id):
         flash('Страница успешно проверена', 'success')
     except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
         flash('Произошла ошибка при проверке', 'danger')
+
+    print(DATABASE_URL)
     return redirect(url_for('url', id=id))
