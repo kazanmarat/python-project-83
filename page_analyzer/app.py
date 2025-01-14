@@ -65,7 +65,7 @@ def index_post():
         flash('Некорректный URL', 'danger')
         return render_template(
             'index.html',
-            search=address)
+            search=address), 422
 
     id_url = DB.find_url_name(clean_url)
     if id_url:
