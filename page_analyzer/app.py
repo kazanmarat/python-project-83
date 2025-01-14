@@ -37,15 +37,12 @@ import os
 from page_analyzer.db import Database
 import page_analyzer.url_handler as url_handler
 import requests
+from dotenv import load_dotenv
 
-
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ModuleNotFoundError:
-    pass
 
 app = Flask(__name__)
+
+load_dotenv()
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 DATABASE_URL = os.getenv('DATABASE_URL')
 DB = Database(DATABASE_URL)
