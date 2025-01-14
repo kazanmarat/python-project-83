@@ -55,7 +55,7 @@ def index_get():
     )
 
 
-@app.post('/')
+@app.post('/urls')
 def index_post():
     address = request.form.get('url', '')
     clean_url = url_handler.clear_url(address)
@@ -76,7 +76,7 @@ def index_post():
     return redirect(url_for('url', id=id_url), code=302)
 
 
-@app.route('/urls/')
+@app.route('/urls')
 def urls():
     addresses = DB.get_content()
     return render_template(
