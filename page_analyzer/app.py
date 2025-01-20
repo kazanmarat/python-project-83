@@ -2,12 +2,14 @@
 Module for a Flask web application that interacts with a PostgreSQL database.
 
 Imports:
-- Flask: Web framework for creating the application.
+- flask: Web framework for creating the application.
 - os: Operating system module for interacting with the operating system.
 - Database: Custom class for interacting
     with a PostgreSQL database using psycopg2.
 - url_handler: Module for handling URLs.
 - requests: HTTP library for making requests.
+- load_dotenv: reads key-value pairs from a .env file
+    and can set them as environment variables
 
 Environment Setup:
 - Loads environment variables from a .env file using dotenv.
